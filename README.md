@@ -51,7 +51,14 @@ Every project here is built, tested, and documented on a real Ubuntu machine run
 ---
 
 ### 3. Ansible — Configuration Management
-> *(Coming soon)* Automating configuration and application deployment using Ansible playbooks.
+> Automating configuration and application deployment using Ansible playbooks.
+
+| Project | Description |
+|---------|-------------|
+| [playbook.yml](./ansible/playbook.yml) | Install and verify Nginx is running on the local machine |
+| [deploy-webpage.yml](./ansible/deploy-webpage.yml) | Deploy a custom HTML page through Nginx |
+
+**Skills:** Ansible, YAML playbooks, inventory, idempotency, apt module, service module, copy module
 
 ---
 
