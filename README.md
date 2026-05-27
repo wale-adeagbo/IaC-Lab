@@ -1,4 +1,4 @@
-(https://github.com/user-attachments/files/28311300/README.md)
+
 # IaC-Lab #
 
 **Infrastructure as Code | Kubernetes | Terraform | Ansible**  
