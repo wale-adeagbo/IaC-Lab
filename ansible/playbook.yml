@@ -1,0 +1,21 @@
+---
+- name: Verify and configure Nginx on local machine
+  hosts: local
+  become: true
+
+  tasks:
+    - name: Ensure Nginx is installed
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Ensure Nginx service is running
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Print confirmation message
+      debug:
+        msg: "Nginx is installed and running successfully"
