@@ -1,5 +1,5 @@
-[README.md](https://github.com/user-attachments/files/28311300/README.md)
-# IaC-Lab#
+(https://github.com/user-attachments/files/28311300/README.md)
+# IaC-Lab #
 
 **Infrastructure as Code | Kubernetes | Terraform | Ansible**  
 *A structured, hands-on lab documenting progression from manual infrastructure management to fully code-driven operations.*
