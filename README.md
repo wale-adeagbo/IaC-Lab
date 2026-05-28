@@ -21,7 +21,7 @@ Every project here is built, tested, and documented on a real Ubuntu machine run
 | OS | Ubuntu 24 (host: Maximus) |
 | Kubernetes | MicroK8s v1.35.0 |
 | IaC Tool | Terraform v1.10.5 |
-| Config Management | Ansible (in progress) |
+| Config Management | Ansible core 2.20.1 |
 | Container Runtime | containerd |
 
 ---
