@@ -5,17 +5,17 @@
 
   tasks:
     - name: Ensure Nginx is installed
-      apt:
+      ansible.builtin.apt:
         name: nginx
         state: present
-        update_cache: yes
+        update_cache: true
 
     - name: Ensure Nginx service is running
-      service:
+      ansible.builtin.service:
         name: nginx
         state: started
-        enabled: yes
+        enabled: true
 
     - name: Print confirmation message
-      debug:
+      ansible.builtin.debug:
         msg: "Nginx is installed and running successfully"

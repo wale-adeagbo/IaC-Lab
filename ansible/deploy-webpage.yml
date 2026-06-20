@@ -5,8 +5,9 @@
 
   tasks:
     - name: Create custom index.html
-      copy:
+      ansible.builtin.copy:
         dest: /var/www/html/index.html
+        mode: "0644"
         content: |
           <html>
             <head><title>IaC Lab</title></head>
@@ -17,6 +18,6 @@
           </html>
 
     - name: Ensure Nginx is serving the page
-      service:
+      ansible.builtin.service:
         name: nginx
         state: restarted

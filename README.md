@@ -61,7 +61,24 @@ Every project here is built, tested, and documented on a real Ubuntu machine run
 **Skills:** Ansible, YAML playbooks, inventory, idempotency, apt module, service module, copy module
 
 ---
+### 4. CI/CD — Automated Validation Pipeline
+> Enforcing validation gates on every push using GitHub Actions, before any change reaches infrastructure.
 
+| Workflow | Description |
+|----------|-------------|
+| [.github/workflows/ci.yml](./.github/workflows/ci.yml) | Lints and validates Terraform and Ansible on every push/PR |
+
+**What it does:**
+- **Terraform:** `fmt -check`, `terraform init -backend=false`, `terraform validate`, TFLint
+- **Ansible:** `--syntax-check` on both playbooks, `ansible-lint` (production profile)
+
+**What it deliberately doesn't do (yet):** run `terraform plan` or `apply` against live infrastructure. The Terraform Kubernetes provider here targets a local MicroK8s cluster on Maximus — a GitHub-hosted runner has no route to it. Validation and linting catch config errors and drift from convention without needing a live cluster.
+
+**Planned next step:** spin up an ephemeral `kind` (Kubernetes-in-Docker) cluster inside the CI job so `terraform plan` (and eventually a manually-approved `apply`) can run against something real, fully inside GitHub-hosted runners — no exposure of the home network required.
+
+**Skills:** GitHub Actions, CI/CD pipeline design, validation gates, TFLint, ansible-lint, infrastructure governance
+
+---
 ## Progression
 
 ```
@@ -73,7 +90,10 @@ Terraform (infrastructure as code)
         ↓
 Ansible (configuration management)
         ↓
-Full IaC pipeline (Terraform + Ansible + Kubernetes)
+CI/CD Validation gates (GitHub Actions)
+        ↓
+Full IaC pipeline (Terraform + Ansible + Kubernetes, live plan via ephemeral kind cluster)
+
 ```
 
 ---
