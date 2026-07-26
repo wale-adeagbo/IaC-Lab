@@ -1,0 +1,13 @@
+framework:
+  - terraform
+  - ansible
+
+skip-check:
+  # Add specific check IDs here if you need to suppress false positives,
+  # e.g. for a local/lab-only cluster that won't have public-facing concerns
+  # - CKV_K8S_8
+
+soft-fail: false
+compact: true
+quiet: false
+output: cli
