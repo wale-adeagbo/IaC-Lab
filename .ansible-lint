@@ -1,0 +1,12 @@
+exclude_paths:
+  - .cache/
+  - .github/
+
+use_default_rules: true
+
+skip_list:
+  # Example: skip if you intentionally use command over module in a lab context
+  # - command-instead-of-module
+
+warn_list:
+  - experimental
