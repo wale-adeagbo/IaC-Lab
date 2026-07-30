@@ -12,6 +12,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  pull-requests: write
+  
 jobs:
   terraform:
     name: Terraform (fmt, validate, lint)
@@ -73,3 +77,73 @@ jobs:
 
       - name: Ansible Lint
         run: ansible-lint
+
+ terraform-plan-live:
+    name: Terraform Plan (live, ephemeral kind cluster)
+    runs-on: ubuntu-latest
+    needs: terraform
+    defaults:
+      run:
+        working-directory: terraform/kubernetes-nginx
+ 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+ 
+      - name: Create ephemeral kind cluster
+        uses: helm/kind-action@v1.10.0
+        with:
+          cluster_name: iac-lab-ci
+ 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.10.5"
+ 
+      - name: Terraform Init
+        run: terraform init -backend=false
+ 
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan -no-color -input=false 2>&1 | tee plan_output.txt
+        continue-on-error: true
+ 
+      - name: Fail job if plan errored
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+ 
+      - name: Comment plan on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const plan = fs.readFileSync('terraform/kubernetes-nginx/plan_output.txt', 'utf8');
+            const marker = '<!-- terraform-plan-live -->';
+            const maxLen = 60000;
+            const body = plan.length > maxLen ? plan.slice(0, maxLen) + '\n... (truncated)' : plan;
+            const commentBody = `${marker}\n### Terraform Plan (live, ephemeral \`kind\` cluster)\n\`\`\`\n${body}\n\`\`\``;
+ 
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find(c => c.body.includes(marker));
+ 
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body: commentBody,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: commentBody,
+              });
+            }
