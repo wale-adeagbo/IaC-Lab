@@ -1,5 +1,10 @@
 name: Compliance and Lint Checks
 
+# TFLint and ansible-lint already run in ci.yml, correctly scoped to
+# terraform/kubernetes-nginx and ansible/ respectively. This workflow only
+# covers what ci.yml doesn't: a dedicated security/compliance scan via
+# Checkov across both Terraform and Ansible.
+
 on:
   pull_request:
     branches: [main]
