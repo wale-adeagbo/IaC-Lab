@@ -71,10 +71,11 @@ Every project here is built, tested, and documented on a real Ubuntu machine run
 **What it does:**
 - **Terraform:** `fmt -check`, `terraform init -backend=false`, `terraform validate`, TFLint
 - **Ansible:** `--syntax-check` on both playbooks, `ansible-lint` (production profile)
+- **Live plan**: an ephemeral kind (kubernetes-in-docker) cluster is spun up inside the CI job so terraform plan runs against something real, fully inside the GitHub-hosted runner. The plan output is posted as a comment on the pull request, and the cluster is discarded when the job ends.
 
-**What it deliberately doesn't do (yet):** run `terraform plan` or `apply` against live infrastructure. The Terraform Kubernetes provider here targets a local MicroK8s cluster on Maximus — a GitHub-hosted runner has no route to it. Validation and linting catch config errors and drift from convention without needing a live cluster.
+**What it deliberately doesn't do (yet):** `apply` against live infrastructure. The Terraform Kubernetes provider here targets a local MicroK8s cluster on Maximus for real deployments — a GitHub-hosted runner has no route to it.So apply stays manual, local step. The live-plan job proves the plan is valid; it never mutates anything outside its own throwaway cluster.
 
-**Planned next step:** spin up an ephemeral `kind` (Kubernetes-in-Docker) cluster inside the CI job so `terraform plan` (and eventually a manually-approved `apply`) can run against something real, fully inside GitHub-hosted runners — no exposure of the home network required.
+**Planned next step:** a manually-approved apply gate, likely via a self-hosted runner on Maximus so CI can eventually deploy to the real MicroK8s cluster, not just a throwaway kind one.
 
 **Skills:** GitHub Actions, CI/CD pipeline design, validation gates, TFLint, ansible-lint, infrastructure governance
 
@@ -100,11 +101,11 @@ Full IaC pipeline (Terraform + Ansible + Kubernetes, live plan via ephemeral kin
 
 ## Key Concepts Covered
 
-- **Imperative vs Declarative** infrastructure management
-- **Desired state** — Kubernetes and Terraform both converge to what you define
-- **Infrastructure as Code** — version-controlled, repeatable, auditable
-- **State management** — how Terraform tracks what it owns
-- **Provider ecosystem** — extending Terraform to manage Kubernetes resources
+- **Imperative vs Declarative** infrastructure management.
+- **Desired state** — Kubernetes and Terraform both converge to what you define.
+- **Infrastructure as Code** — version-controlled, repeatable, auditable.
+- **State management** — how Terraform tracks what it owns.
+- **Provider ecosystem** — extending Terraform to manage Kubernetes resources.
 
 ---
 
